@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.DeptEmpMapper">
+
+    <select id="selectForDept" resultMap="rm01">
+        SELECT
+            d.id AS d_id,
+            d. NAME AS d_name,
+            e.id AS e_id,
+            e. NAME AS e_name
+        FROM
+            dept d
+        LEFT JOIN emp e ON d.id = e.deptid
+    </select>
+
+    <resultMap id="rm01" type="com.test.pojo.Dept">
+        <id column="d_id" property="id"/>
+        <result column="d_name" property="name"/>
+        <collection property="eList" ofType="com.test.pojo.Emp">
+            <id column="e_id" property="id"/>
+            <result column="e_name" property="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectForEmp" resultMap="rm02">
+            SELECT
+                e.id AS e_id,
+                e. NAME AS e_name,
+                d.id AS d_id,
+                d. NAME AS d_name
+
+        FROM
+            emp e
+        LEFT JOIN dept d ON d.id = e.deptid
+    </select>
+
+    <resultMap id="rm02" type="Emp">
+        <id column="e_id" property="id"></id>
+        <result column="e_name" property="name"/>
+        <association property="dept" javaType="Dept">
+            <id column="d_id" property="id"/>
+            <result column="d_name" property="name"/>
+        </association>
+    </resultMap>
+</mapper>

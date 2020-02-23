@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.RoomGradeMapper">
+
+    <select id="selectLeftJoin" resultMap="rm01">
+        SELECT
+            g1.id AS g_id,
+            g1.`name` AS g_name,
+            r1.`name` AS r_name,
+            r1.id as r_id
+        FROM
+            grade g1
+        LEFT JOIN room r1 ON g1.rid = r1.id;
+    </select>
+
+    <resultMap id="rm01" type="com.test.pojo.Grade">
+
+        <id column="g_id" property="id"/>
+        <result column="g_name" property="name"/>
+
+        <association property="room" javaType="com.test.pojo.Room">
+            <id column="r_id" property="id"/>
+            <result column="r_name" property="name"/>
+        </association>
+
+    </resultMap>
+
+</mapper>

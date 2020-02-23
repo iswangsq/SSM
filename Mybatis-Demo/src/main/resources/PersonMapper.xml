@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.PersonMapper">
+   <!-- <select id="selectOne" resultType="com.test.pojo.Person">
+        select * from user where id=#{id}
+    </select>-->
+    <select id="selectOne" resultMap="rm01" >
+        select * from user where id=#{id}
+    </select>
+
+    <resultMap id="rm01" type="com.test.pojo.Person" >
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+
+    </resultMap>
+    <sql id="select01">
+        select * from user
+    </sql>
+
+    <select id="selectList" resultType="com.test.pojo.Person">
+        <include refid="select01"/>
+    </select>
+
+    <select id="selectListByAge" resultType="com.test.pojo.Person">
+        <include refid="select01"/> where age BETWEEN #{min} and #{max}
+    </select>
+
+    <select id="selectPerson" resultType="com.test.pojo.Person">
+        <include refid="select01"/> where id = #{id} and age = #{age}
+    </select>
+
+    <insert id="insertPerson">
+        insert into user values (null,#{name},#{age})
+    </insert>
+
+    <select id="orderByColumn" resultType="com.test.pojo.Person">
+        <include refid="select01"/> order by ${c}
+    </select>
+
+    <update id="updateById">
+
+
+        update user
+        <set>
+            <if test="age!=0">
+                age=#{age},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="selectWhere" resultType="com.test.pojo.Person">
+        select * from user
+        <where>
+            <if test="age != null"> age = #{age}</if>
+            <if test="name != null"> and name = #{name}</if>
+        </where>
+    </select>
+
+    <insert id="insertTrim" >
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="name != null">name,</if>
+            <if test="age != 0">age,</if>
+        </trim>
+        values (
+        <trim suffixOverrides=",">
+            null,
+            <if test="name != null">#{name},</if>
+            <if test="age != 0">#{age},</if>
+        </trim>
+        )
+    </insert>
+
+    <delete id="deleteOne" >
+        delete  from user
+        <where>
+            <if test="id != null"> id=#{id}</if>
+            <if test="name != null"> and name=#{name}</if>
+            <if test="age != 0"> and age=#{age}</if>
+        </where>
+    </delete>
+
+    <delete id="deleteForEach">
+        delete  from  user
+        where id in
+        <foreach collection="list" separator="," open="(" close=")" item="id" >
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
