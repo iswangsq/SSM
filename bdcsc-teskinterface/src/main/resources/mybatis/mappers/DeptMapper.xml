@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--保证接口和映射文件一一对应  -->
+<mapper namespace="com.chuyue.mapper.DeptMapper">
+
+    <select id="findAllDept" resultMap="deptRM1">
+        select *
+        from dept_p d
+                 left join (
+            select DEPT_ID as pid, DEPT_NAME as p_name
+            from dept_p
+        ) p on d.PARENT_ID = p.pid
+        order by d.DEPT_ID
+    </select>
+
+    <resultMap id="deptRM1" type="Dept" autoMapping="true">
+        <id column="dept_id" property="deptId"/>
+        <association property="parentDept" javaType="Dept">
+            <id column="p_id" property="deptId"/>
+            <result column="p_name" property="deptName"/>
+        </association>
+    </resultMap>
+
+
+</mapper>
